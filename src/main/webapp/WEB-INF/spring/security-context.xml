@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xmlns:security="http://www.springframework.org/schema/security"
+	xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd
+		http://www.springframework.org/schema/security http://www.springframework.org/schema/security/spring-security.xsd">
+<bean id="bcryptPasswordEncoder"  class="org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder"/>
+<bean id="CustomUserDetailsService"  class="com.timf.security.CustomUserDetailsService"/>
+<bean id="customPasswordEncoder"  class="com.timf.security.CustomNoOpPasswordEncoder"/>
+<bean id="customLoginSuccess"  class="com.timf.security.CustomLoginSuccessHandler"/>
+
+<security:http auto-config="true" use-expressions="true">
+    <security:intercept-url pattern="/feedback/list" access="hasAnyRole('ROLE_CLIENT','ROLE_ADMIN')"/>
+    <security:intercept-url pattern="/feedback/get" access="hasAnyRole('ROLE_CLIENT','ROLE_ADMIN')"/>
+    <security:intercept-url pattern="/feedback/write_form" access="hasAnyRole('ROLE_CLIENT','ROLE_ADMIN')"/>
+    <security:intercept-url pattern="/driver/get" access="hasAnyRole('ROLE_CARRIER','ROLE_ADMIN')"/>
+    <security:intercept-url pattern="/driver/list" access="hasAnyRole('ROLE_CARRIER','ROLE_ADMIN')"/>
+    <security:intercept-url pattern="/voc/list" access="hasRole('ROLE_ADMIN')"/>
+    <security:intercept-url pattern="/voc/get" access="hasRole('ROLE_ADMIN')"/>
+    <security:intercept-url pattern="/voc/mailsend" access="hasRole('ROLE_ADMIN')"/>
+    <security:intercept-url pattern="/voc/compensation" access="hasRole('ROLE_ADMIN')"/>
+	<security:form-login login-page="/member/customLogin" />
+	<security:logout invalidate-session="true"/>
+	<security:access-denied-handler error-page="/accessError"/>
+</security:http>
+
+<security:authentication-manager>
+<security:authentication-provider
+user-service-ref="CustomUserDetailsService">
+
+<security:password-encoder ref="bcryptPasswordEncoder" />
+
+</security:authentication-provider>
+</security:authentication-manager>
+
+
+</beans>

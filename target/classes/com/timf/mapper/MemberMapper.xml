@@ -1,0 +1,68 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org///DTO Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace = "com.timf.mapper.MemberMapper">
+<resultMap type="com.timf.domain.MemberVO" id="memberMap">
+<id property="id" column="id"/>
+<result property="c_name" column="c_name"/>
+<result property="id" column="id"/>
+<result property="pw" column="pw"/>
+<result property="email" column="email"/>
+<result property="num" column="num"/>
+<result property="d_num" column="d_num"/>
+<collection property="authList" resultMap="authMap">
+</collection>
+</resultMap>
+
+<resultMap type="com.timf.domain.AuthVO" id="authMap">
+<result property="id" column="id"/>
+<result property="auth" column="auth"/>
+</resultMap>
+
+<select id="read" resultMap="memberMap">
+SELECT
+mem.id, pw, c_name, email, num,d_num, auth
+FROM
+Fjoin mem LEFT OUTER JOIN Fjoin_auth auth on mem.id= 
+auth.id
+WHERE mem.id = #{id}
+
+</select>
+<select id="read1" resultMap="memberMap">
+SELECT
+mem.id, pw, c_name, email, num,d_num, auth
+FROM
+Fjoin mem LEFT OUTER JOIN Fjoin_auth auth on mem.id= 
+auth.id
+WHERE mem.id = #{id}
+
+</select>
+<select id="read2" resultMap="authMap">
+SELECT
+auth
+FROM
+Fjoin_auth
+WHERE Fjoin_auth.id= #{id}
+
+</select>
+
+<insert id="insert1" parameterType="map">
+insert into Fjoin(c_name,id,pw,email,num,d_num)
+values(#{board.c_name}, #{board.id}, #{board.pw}, #{board.email}, #{board.num}, #{board.d_num})
+</insert>
+<insert id="insert2" parameterType="map">
+insert into Fjoin_auth(id,auth)
+values(#{au.id}, #{au.auth})
+</insert>
+
+<insert id="insert3" parameterType="map">
+insert into Fjoin(c_name,id,pw,email,num)
+values(#{board.c_name}, #{board.id}, #{board.pw}, #{board.email}, #{board.num})
+</insert>
+<insert id="insert4" parameterType="map">
+insert into Fjoin_auth(id,auth)
+values(#{au.id}, #{au.auth})
+</insert>
+
+</mapper>

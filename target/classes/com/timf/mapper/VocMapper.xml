@@ -1,0 +1,98 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+  PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+  "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.timf.mapper.VocMapper">
+<select id="getList" resultType="com.timf.domain.VocVO">
+<![CDATA[
+	select * from voc where vo_num > 0
+]]>
+</select>
+
+
+
+<insert id="insert" parameterType="map">
+insert into voc(vo_num,ca_name,d_name,c_name,im_name,im_content,date1,c_content,im_re,pr_num,d_num)
+values(voc_seq.nextval,#{board.ca_name},#{board.d_name},#{board.c_name},#{board.im_name},#{board.im_content},sysdate,#{board.c_content},#{board.im_re},#{board.pr_num},#{board.d_num})
+</insert>
+
+<select id="read" resultType="com.timf.domain.VocVO">
+select * from voc where vo_num = #{vo_num}
+</select>
+
+<select id="read2" resultType="com.timf.domain.VocVO">
+select * from product where pr_num = #{pr_num}
+</select>
+
+<delete id="delete">
+delete from voc where vo_num = #{vo_num}
+</delete>
+
+<update id="penalty">
+update voc
+set
+p_num =  #{vo_num},
+p_content=  #{board.p_content}
+where vo_num =  #{vo_num}
+</update>
+
+<update id="final1">
+update voc
+set
+d_objection ='n',
+re_num = #{vo_num},
+re_price = #{board.p_content}
+where vo_num =  #{board.vo_num}
+</update>
+
+<insert id="final2" parameterType="map">
+insert into penalty(p_num,p_content)
+values(#{vo_num},#{board.p_content})
+</insert>
+
+<insert id="final3" parameterType="map">
+insert into recompense(re_num,im_name,re_price)
+values(#{vo_num},#{board.im_name},#{board.p_content})
+</insert>
+
+
+
+<update id="final4">
+update driver
+set
+D_DEDUCTION=(select sum(#{board.p_content}+D_DEDUCTION)from driver)
+where d_num = #{board.d_num}
+</update>
+<update id="final5">
+update driver
+set
+d_amount=(select abs(D_SALARY-D_DEDUCTION)from driver)
+where d_num = #{board.d_num}
+</update>
+
+
+<update id="mailsend">
+update voc
+set
+d_check ='y'
+where vo_num =  #{vo_num}
+</update>
+
+
+<update id="update">
+update voc
+set im_name=  #{board.im_name},
+im_content =  #{board.im_content},
+p_num =  #{board.p_num},
+p_content=  #{board.p_content},
+d_check =  #{board.d_check},
+d_objection =  #{board.d_objection},
+re_num =  #{board.re_num},
+re_price =  #{board.re_price},
+date1= sysdate
+c_content =  #{board.c_content},
+im_re =  #{board.im_re},
+where vo_num =  #{board.vo_num}
+</update>
+
+</mapper>

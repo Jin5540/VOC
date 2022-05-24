@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+  PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+  "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.timf.mapper.BoardMapper">
+<select id="getList" resultType="com.timf.domain.BoardVO">
+<![CDATA[
+	select * from claim where aid > 0
+]]>
+</select>
+
+
+
+<insert id="insert" parameterType="map">
+insert into claim(aid,id,im_title,im_content,im_re,date1,c_name,d_name,pr_num,ca_name)
+values(claim_seq.nextval, #{id}, #{board.im_title}, #{board.im_content},#{board.im_re},sysdate,#{board.c_name},#{board.d_name},#{board.pr_num},#{board.ca_name})
+</insert>
+
+<select id="read" resultType="com.timf.domain.BoardVO">
+select * from claim where aid = #{aid}
+</select>
+
+<delete id="delete">
+delete from claim where aid = #{aid}
+</delete>
+
+<update id="update">
+update claim
+set im_title=  #{board.im_title},
+im_content =  #{board.im_content},
+id =  #{id},
+date1= sysdate
+where aid =  #{board.aid}
+</update>
+
+</mapper>
